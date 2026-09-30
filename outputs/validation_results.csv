@@ -1,0 +1,15 @@
+﻿check,passed,details
+1. amount numeric,True,float64
+2. amount_uah numeric,True,float64
+3. UTC datetime types,True,"datetime64[us, UTC], datetime64[us, UTC]"
+4. txn_id unique,True,duplicates=0
+5. no full duplicates,True,duplicates=0
+6. currency dictionary,True,"{'UAH': 6174, 'USD': 997, 'EUR': 909, 'PLN': 520}"
+7. channel dictionary,True,"{'POS': 5738, 'ECOM': 2128, 'ATM': 734}"
+8. country valid ISO-2 dictionary,True,"['CZ', 'DE', 'ES', 'FR', 'GB', 'IT', 'PL', 'UA', 'US']"
+9. MCC 4 digits or NA,True,NA=13.70%
+10. posted_at >= operation_at,True,violations=0
+11. 0 < fx_rate <= 100,True,bad=0
+12. FX mismatch <=3%,True,max=2.984%
+13. chargeback_ref valid,True,invalid_refs=0
+14. chargeback/reversal mirrored amounts,True,rows_checked=817

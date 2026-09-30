@@ -1,0 +1,25 @@
+﻿field,rule,changes_count,examples
+amount,"Парсинг чисел: пробіли/NBSP видалити, десяткову кому перетворити на крапку",897,"407,80 -> 407.8 | 232,35 -> 232.35"
+amount_uah,"Парсинг чисел: пробіли/NBSP видалити, десяткову кому перетворити на крапку",0,
+fx_rate,"Парсинг чисел: пробіли/NBSP видалити, десяткову кому перетворити на крапку",0,
+fee_amount,"Парсинг чисел: пробіли/NBSP видалити, десяткову кому перетворити на крапку",897,"0,61 -> 0.61 | 0,00 -> 0.0"
+currency,trim + upper; лише UAH/USD/EUR/PLN,449,uah  -> UAH | pln  -> PLN
+channel,Нормалізація до POS/ECOM/ATM,716,POS  -> POS | POS  -> POS
+country,trim + upper + UK→GB; невідомі → NA,314, UA  -> UA |  Ua  -> UA
+merchant_name,"Видалити invisible chars, collapse spaces, trim, upper",7958,Silpo -> SILPO | Entertainment Hub -> ENTERTAINMENT HUB
+operation_at,Уніфікація часу до timezone-aware UTC,8960,example: 30.06.2026 22:02 -> 2026-06-30 19:02:00+00:00
+posted_at,Уніфікація часу до timezone-aware UTC,8960,example: 2026-07-02 03:56:56 -> 2026-07-02 03:56:56+00:00
+mcc,"Невалідні коди, що не складаються з 4 цифр → NA",108, 5812x  -> <NA> | 541 -> <NA>
+rows,Видалення повних дублікатів,360,"['TXN0000951', 'TXN0002996']"
+txn_id,"Near-dedup після текстової нормалізації: один запис на txn_id, пріоритет більш повного",0,[]
+amount,Для status=posted без chargeback_ref від’ємну суму привести до додатної,86,"[{'txn_id': 'TXN0000028', 'amount': -370.02, 'amount_uah': -370.32}, {'txn_id': 'TXN0007004', 'amount': -91.12, 'amount_uah': nan}]"
+fx_rate,Для UAH встановити fx_rate=1,613,"[{'txn_id': 'TXN0005498', 'fx_rate': nan}, {'txn_id': 'TXN0006803', 'fx_rate': nan}]"
+fx_rate,fx_rate <=0 або >100 → NA перед відновленням,14,"[{'txn_id': 'TXN0000611', 'currency': 'PLN', 'fx_rate': 103.1799657798695}, {'txn_id': 'TXN0000545', 'currency': 'EUR', 'fx_rate': 0.0}]"
+fx_rate,"Відновити як abs(amount_uah / amount), якщо обидві суми відомі",86,"[{'txn_id': 'TXN0008423', 'currency': 'EUR', 'fx_rate': 44.95390305347603}, {'txn_id': 'TXN0000611', 'currency': 'PLN', 'fx_rate': 10.703396175049344}]"
+fx_rate,Missing USD: медіана по валюті,1,41.186499999999995
+fx_rate,Missing EUR: медіана по валюті,4,45.0142
+fx_rate,Missing PLN: медіана по валюті,1,10.5473
+amount_uah,Missing → amount * fx_rate,860,"[{'txn_id': 'TXN0005098', 'amount': -290.9, 'currency': 'UAH', 'fx_rate': 1.0}, {'txn_id': 'TXN0007049', 'amount': 298.8, 'currency': 'UAH', 'fx_rate': 1.0}]"
+amount_uah,Якщо FX-відхилення >3% → amount_uah = amount * fx_rate,219,"[{'txn_id': 'TXN0002503', 'amount': 27.9, 'fx_rate': 1.0, 'amount_uah': 29.03}, {'txn_id': 'TXN0001984', 'amount': 39.88, 'fx_rate': 1.0, 'amount_uah': 37.81}]"
+posted_at,Якщо posted_at < operation_at → operation_at + 24h,110,"[{'txn_id': 'TXN0000285', 'operation_at': Timestamp('2026-04-03 10:28:37+0000', tz='UTC'), 'posted_at': Timestamp('2026-04-01 10:26:55+0000', tz='UTC')}, {'txn_id': 'TXN0006851', 'operation_at': Timestamp('2026-04-04 19:15:02+0000', tz='UTC'), 'posted_at': Timestamp('2026-04-02 09:23:32+0000', tz='UTC')}]"
+chargeback_ref/amount,Валідний ref + дзеркальний знак сум для reversal/chargeback,211,"[{'txn_id': 'TXN0005098', 'ref': 'TXN0003756', 'before': (np.float64(-290.9), np.float64(-290.9), np.float64(1.0)), 'after': (np.float64(-290.9), np.float64(-289.15), np.float64(1.0))}, {'txn_id': 'TXN0008048', 'ref': 'TXN0003334', 'before': (np.float64(-132.3), np.float64(-132.3), np.float64(1.0)), 'after': (np.float64(-132.3), np.float64(-132.68), np.float64(1.0))}]"
